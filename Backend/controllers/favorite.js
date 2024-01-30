@@ -49,7 +49,10 @@ router.get('/myfavoritelist',userMiddleWare,async(req,res)=>{
     const id = req.userId._id;
     const user = await User.findById(id);
     const list = user.favorite;
-    res.json({list})
+    console.log(list)
+    const blogs = await Blog.find({ _id: { $in: list } });
+
+    res.json({ favoriteBlogs: blogs });
 })
 
 module.exports =

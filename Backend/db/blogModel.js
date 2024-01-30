@@ -3,13 +3,14 @@ const mongoose = require('mongoose')
 const BlogSchema = mongoose.Schema({
     title:{
         type:String,
-        require:true,
-        maxlength : [100,'Title cannot exceed 100 characters']
+        required:true,
+        maxlength : [100,'Title cannot exceed 100 characters'],
+        minlength : [3,'Title cannot be less than 3 character']
     },
     content:{
         type:String,
-        require:true,
-        minlength : [100,'Contect must be more than 100 character']
+        required:true,
+        minlength : [100,'Content must be more than 100 character']
     },
     author : {
         type:mongoose.Schema.Types.ObjectId,

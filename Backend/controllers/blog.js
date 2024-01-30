@@ -3,14 +3,15 @@ const {Blog,User}  = require('../db/index');
 const { userMiddleWare } = require('../middleware/userMiddleWare');
 const router = express.Router()
 router.post('/addblog',userMiddleWare ,async(req,res)=>{
+    console.log(req.body)
     try{
-    const {title,content} = req.body;
+    const {title,description} = req.body;
     const author = req.userId._id;
     const user = await User.findById(author.valueOf());
     if(!user)return res.send({msg:'User is not found'})
     const blog = new Blog({
         title:title,
-        content:content,
+        content:description,
         author:author,
     })
     await blog.save()
@@ -34,14 +35,14 @@ router.post('/addblog',userMiddleWare ,async(req,res)=>{
 
 // update post
 
-router.put('/updateblog/:id',userMiddleWare,async(req,res)=>{
+router.put('/updateblog/:id',userMiddleWare,async(req,res,next)=>{
     try{
     const{title,content} = req.body;
     const {id} = req.params
     const blog = await Blog.findById(id);
     if(!blog) return res.send("Blog id is not correct")
     if (blog.author.toString() !== req.userId._id.toString()) {
-        return next(new ErrorHandler("Unauthorized", 401));
+        return next(new ErrorHandler({msg:"Unauthorized"}));
     }
     blog.title=title;
     blog.content=content;
@@ -51,7 +52,7 @@ router.put('/updateblog/:id',userMiddleWare,async(req,res)=>{
 }
 catch(err){
     console.log(err);
-    res.send("Internal Server Error")
+    res.send({msg:"Internal Server Error"})
 }
 })
 
@@ -88,6 +89,23 @@ router.delete('/deleteblog/:blog_id',userMiddleWare,async (req,res)=>{
     }
 
 
+})
+
+router.get('/getblog/:id',userMiddleWare,async(req,res)=>{
+    console.log(req.params.id)
+    try{
+    const {id} = req.params;
+    const blog  =await Blog.findById(id);
+    if(!blog) return res.send("Blog id is not correct")
+    
+    res.status(200).json(blog);
+}
+catch(err)
+{
+    console.log(err)
+        res.send({msg:"Internal Error"})
+}
+    
 })
 
 module.exports =router
