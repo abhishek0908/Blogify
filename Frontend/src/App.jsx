@@ -11,46 +11,20 @@ import CreateBlog from './components/CreateBlog';
 import BlogContent from './components/BlogContent';
 import MyFavorite from './components/MyFavorite';
 import MyBlogs from './components/MyBlogs';
-import ProtectedContext from './components/ProtectedContext';
+import Protected from './components/Protected';
 
 const AppLayout = () => {
-    const[userData,setUserData] = useState("")
-    useEffect(() => {
-        fetchData();
-      }, []);
-    
-      const fetchData = async () => {
-        try {
-          // Retrieve the token from sessionStorage or localStorage
-          const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
-    
-          const response = await fetch('http://localhost:3000/user/profile', {
-            headers: {
-              'Authorization': `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          const responseData = await response.json();
-          console.log(responseData);
-          setUserData(responseData.firstname);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
     
     const location = useLocation();
     return (
         <>
-        {console.log(userData)}
-        <ProtectedContext.Provider value={{name:userData,setUserData}}>
+      
         <div className="app">
         <Header />
         {/* Conditionally render Banner based on route */}
         {location.pathname === '/' && <Banner />}
         <Outlet />
     </div>
-    </ProtectedContext.Provider>
     </>
     );
 };
@@ -75,23 +49,23 @@ const appRouter = createBrowserRouter([
             },
             {
                 path: "/myprofile",
-                element: <MyProfile/>,
+                element: <Protected Component = {MyProfile}></Protected>,
             },
             {
                 path: "/createblog",
-                element: <CreateBlog/>,
+                element: <Protected Component = {CreateBlog}></Protected>,
             },
             {
                 path: "/blog/:resId",
-                element: <BlogContent/>,
+                element: <Protected Component = {BlogContent}></Protected>,
             },
             {
                 path: "/myfavorite",
-                element: <MyFavorite/>,
+                element: <Protected Component = {MyFavorite}></Protected>,
             },
             {
                 path: "/myblogs",
-                element: <MyBlogs/>,
+                element: <Protected Component = {MyBlogs}></Protected>,
             },
         ],
     },

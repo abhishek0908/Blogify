@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [loginData, setLoginData] = useState({
@@ -15,6 +16,7 @@ const SignIn = () => {
   };
   
   
+  const navigate = useNavigate()
   const fetchData = async () => {
     try {
       const response = await fetch('http://localhost:3000/user/signin', {
@@ -29,6 +31,8 @@ const SignIn = () => {
       if (response.ok) {
         sessionStorage.setItem('jwtToken', responseData.token);
         setMessage(responseData.msg)
+        navigate('/myfavorite')
+        
       } else {
         console.error('Error:', response.statusText);
       }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import ProtectedContext from "./ProtectedContext";
+import ProtectedContext from "./UserContext";
 const MyProfile = () => {
   const [userData, setUserData] = useState({
     firstname:"",
